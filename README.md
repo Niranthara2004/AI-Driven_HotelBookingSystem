@@ -35,5 +35,5 @@ This is an AI-driven hotel booking system built using the **MERN stack**. The sy
 
 1️⃣ **Clone the repository**  
 ```bash
-git clone https://github.com/yourusername/ai-hotel-booking.git
+git clone https://github.com/niranthara2004/ai-hotel-booking.git
 cd ai-hotel-booking
