@@ -1,6 +1,7 @@
 import "dotenv/config";
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 import connectDB from "./infrastructure/db";
+
 import { clerkMiddleware } from "@clerk/express";
 import cors from "cors";
 import bookingsRouter from "./api/booking";
@@ -9,10 +10,11 @@ import globalErrorHandlingMiddleware from "./api/middlewares/global-error-handli
 import { handleWebhook } from "./application/payment";
 import bodyParser from "body-parser";
 import paymentsRouter from "./api/payment";
-
+// Create an Express instance
 const app = express();
 
 app.use(clerkMiddleware());
+// Middleware to parse JSON data in the request body
 app.use(cors({ origin: process.env.FRONTEND_URL }));
 
 app.post(
@@ -27,20 +29,9 @@ app.use("/api/hotels", hotelsRouter);
 app.use("/api/bookings", bookingsRouter);
 app.use("/api/payments", paymentsRouter);
 
-app.use((req: Request, res: Response) => {
-  console.log(`Unhandled request: ${req.method} ${req.url}`);
-  res.status(404).json({ error: "Route not found" });
-});
-
 app.use(globalErrorHandlingMiddleware);
 
+// Define the port to run the server
+connectDB();
 const PORT = process.env.PORT || 8000;
-
-connectDB()
-  .then(() => {
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-  })
-  .catch((err) => {
-    console.error("Failed to start server due to DB connection error:", err);
-    process.exit(1);
-  });
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

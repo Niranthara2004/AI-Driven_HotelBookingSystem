@@ -16,7 +16,7 @@ export default function Hero() {
   };
 
   return (
-    <div className="bg-black/50 relative min-h-screen flex items-center justify-center">
+    <div className="">
       {/* Hero Content */}
       <div className="relative z-10 flex flex-col items-center  text-white justify-center px-8 pt-32 pb-32">
         <h1 className="text-4xl md:text-6xl font-bold  mb-8 text-center">

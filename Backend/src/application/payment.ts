@@ -8,13 +8,23 @@ const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET as string;
 const FRONTEND_URL = process.env.FRONTEND_URL as string;
 
 async function fulfillCheckout(sessionId: string) {
+  // Set your secret key. Remember to switch to your live secret key in production.
+  // See your keys here: https://dashboard.stripe.com/apikeys
   console.log("Fulfilling Checkout Session " + sessionId);
+
+  // TODO: Make this function safe to run multiple times,
+  // even concurrently, with the same session ID
+
+  // TODO: Make sure fulfillment hasn't already been
+  // peformed for this Checkout Session
 
   // Retrieve the Checkout Session from the API with line_items expanded
   const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId, {
     expand: ["line_items"],
   });
-  console.log(util.inspect(checkoutSession, false, null, true /* enable colors */));
+  console.log(
+    util.inspect(checkoutSession, false, null, true /* enable colors */)
+  );
 
   const booking = await Booking.findById(checkoutSession.metadata?.bookingId);
   if (!booking) {
@@ -26,18 +36,14 @@ async function fulfillCheckout(sessionId: string) {
   }
 
   // Check the Checkout Session's payment_status property
-  if (checkoutSession.payment_status === "paid") {
-    // Perform fulfillment of the line items
-    console.log("Performing fulfillment for booking:", booking._id);
-
-    // Update the booking's payment status to "PAID"
+  // to determine if fulfillment should be peformed
+  if (checkoutSession.payment_status !== "unpaid") {
+    // TODO: Perform fulfillment of the line items
+    // TODO: Record/save fulfillment status for this
+    // Checkout Session
     await Booking.findByIdAndUpdate(booking._id, {
       paymentStatus: "PAID",
     });
-
-    console.log("Fulfillment completed for booking:", booking._id);
-  } else {
-    console.log("Payment not completed. No fulfillment performed.");
   }
 }
 
@@ -59,7 +65,8 @@ export const handleWebhook = async (req: Request, res: Response) => {
       return;
     }
   } catch (err) {
-    res.status(400).send(`Webhook Error: ${(err as Error).message}`);
+    // @ts-ignore
+    res.status(400).send(`Webhook Error: ${err.message}`);
     return;
   }
 };
@@ -91,12 +98,10 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
 
     const session = await stripe.checkout.sessions.create({
       ui_mode: "embedded",
-      line_items: [
-        {
-          price: hotel.stripePriceId,
-          quantity: numberOfNights,
-        },
-      ],
+      line_items: [{
+        price: hotel.stripePriceId,
+        quantity: numberOfNights,
+      }],
       mode: "payment",
       return_url: `${FRONTEND_URL}/booking/complete?session_id={CHECKOUT_SESSION_ID}`,
       metadata: {
@@ -107,9 +112,9 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
     res.send({ clientSecret: session.client_secret });
   } catch (error) {
     console.error("Error creating checkout session:", error);
-    res.status(500).json({
-      message: "Failed to create checkout session",
-      error: error instanceof Error ? error.message : String(error),
+    res.status(500).json({ 
+      message: "Failed to create checkout session", 
+      error: error instanceof Error ? error.message : String(error) 
     });
   }
 };

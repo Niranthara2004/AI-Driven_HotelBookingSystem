@@ -19,29 +19,22 @@ import { useCreateHotelMutation } from "@/lib/api";
 const formSchema = z.object({
   name: z.string().min(1, { message: "Hotel name is required" }),
   location: z.string().min(1),
-  image: z.string().url(1),
+  image: z.string().min(1),
   price: z.number(),
   description: z.string().min(1),
 });
 
-const CreateHotelForm = ({ onHotelCreated }) => {
+const CreateHotelForm = () => {
   const [createHotel, { isLoading }] = useCreateHotelMutation();
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      location: "",
-      image: "",
-      price: 0,
-      description: ""
-    }
   });
 
   const handleSubmit = async (values) => {
     const { name, location, image, price, description } = values;
     try {
       toast.loading("Creating hotel...");
-      const result = await createHotel({
+      await createHotel({
         name,
         location,
         image,
@@ -49,12 +42,8 @@ const CreateHotelForm = ({ onHotelCreated }) => {
         description,
       }).unwrap();
       toast.success("Hotel created successfully");
-      if (onHotelCreated) {
-        onHotelCreated(result);
-      }
     } catch (error) {
-      console.error("Hotel creation error:", error);
-      toast.error("Hotel creation failed: " + (error.data?.message || "Unknown error"));
+      toast.error("Hotel creation failed");
     }
   };
 
@@ -95,7 +84,7 @@ const CreateHotelForm = ({ onHotelCreated }) => {
               <FormItem>
                 <FormLabel>Image</FormLabel>
                 <FormControl>
-                  <Input placeholder="Image URL" {...field} />
+                  <Input placeholder="Image" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -137,9 +126,7 @@ const CreateHotelForm = ({ onHotelCreated }) => {
         </div>
 
         <div className="mt-4">
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? "Creating..." : "Create Hotel"}
-          </Button>
+          <Button type="submit">Create Hotel</Button>
         </div>
       </form>
     </Form>

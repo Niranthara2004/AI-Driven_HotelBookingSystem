@@ -1,39 +1,8 @@
-# 🏨 AI-Powered Hotel Booking System  
+# React + Vite
 
-This is an AI-driven hotel booking system built using the **MERN stack**. The system leverages **OpenAI's ARG** and a **vector database**, allowing users to search for hotels either by **keywords** or by **describing their requirements in natural language**.  
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## 🚀 Features  
-✅ AI-powered hotel search with **OpenAI ARG & vector database**  
-✅ Keyword-based and **natural language search**  
-✅ Modern UI using **ShadCN UI** & **Tailwind CSS**  
-✅ Secure **authentication & booking management**  
-✅ Fast and responsive **MERN stack architecture**  
+Currently, two official plugins are available:
 
-## 🛠️ Tech Stack  
-### **Frontend**  
-- React.js  
-- ShadCN UI  
-- Tailwind CSS  
-
-### **Backend**  
-- Node.js  
-- Express.js  
-
-### **Database**  
-- MongoDB  
-- Vector Database  
-
-### **AI Integration**  
-- OpenAI ARG  
-
-### **Authentication**  
-- JSON Web Tokens (JWT)  
-
----
-
-## 📦 Installation & Setup  
-
-1️⃣ **Clone the repository**  
-```bash
-git clone https://github.com/niranthara2004/ai-hotel-booking.git
-cd ai-hotel-booking
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express"
 import UnauthorizedError from "../../domain/errors/unauthorized-error";
 
 export const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
@@ -6,4 +6,4 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
         throw new UnauthorizedError("Unauthorized");
     }
     next();
-};
+}
