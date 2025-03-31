@@ -88,6 +88,7 @@ export const createHotel = async (req: Request, res: Response) => {
       });
       return;
     }
+		const user = req?.auth;
 
     const hotelData = validationResult.data;
 
@@ -103,6 +104,7 @@ export const createHotel = async (req: Request, res: Response) => {
 
     // Create the hotel with the Stripe price ID
     const hotel = new Hotel({
+      userId: user.userId,
       name: hotelData.name,
       location: hotelData.location,
       image: hotelData.image,
